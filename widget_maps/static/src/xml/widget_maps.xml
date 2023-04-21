@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template id="qweb_map" xml:space="preserve">
+    <t t-name="FieldMap">
+        <div class="codeup_gmap"></div>
+    </t>
+</template>
