@@ -9,7 +9,8 @@
     'category': '',
     'depends': [
         'base',
-        'portal'
+        'portal',
+        'base_address_city'
     ],
     'data': [
         'security/ir.model.access.csv',
