@@ -11,14 +11,35 @@ odoo.define('widget_map.FieldMap', function (require) {
 
 		start: function () {
 			var self = this;
+			var autocomplete = this.$el[0];
+			var information = new google.maps.InfoWindow();
 
-			this.map = new google.maps.Map(this.el, {
+			this.map = new google.maps.Map(this.$el[2], {
 				center: {lat: 0, lng: 0},
 				zoom: 0,
 				disableDefaultUI: true,
 			});
 			this.marker = new google.maps.Marker({
 				position: {lat: 0, lng: 0},
+			});
+
+			const search = new google.maps.places.Autocomplete(autocomplete);
+			search.bindTo('bounds', this.map);
+
+			search.addListener('place_changed', function () {
+				information.close();
+				self.marker.setVisible(false);
+				var place = search.getPlace();
+				if (!place.geometry.viewport) {
+					window.alert('Error');
+					return;
+				}
+				if (place.geometry.viewport) {
+					self.map.fitBounds(place.geometry.viewport);
+					self._setValue(JSON.stringify({position: place.geometry.location, zoom: self.map.getZoom()}));
+				} else {
+					self.map.setCenter(place.geometry.location);
+				}
 			});
 
 			this.map.addListener('click', function (e) {
