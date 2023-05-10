@@ -4,15 +4,11 @@
         <field name="name">survey.custom.view.form</field>
         <field name="model">survey.custom</field>
         <field name="arch" type="xml">
-            <form string="Encuesta">
+            <form string="Solicitudes de Factibilidad">
                 <header>
-                    <button name="action_confirm" data-hotkey="v" string="Confirmar" type="object"
-                        attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
-                    <button name="action_cancel" type="object" string="Cancelar"
-                        attrs="{'invisible': ['|', ('state', 'not in', ['draft','confirm']), ('id', '=', False)]}"
-                        data-hotkey="z"/>
-                    <button name="action_draft" states="cancel" type="object"
-                        string="Convertir a borrador" data-hotkey="w"/>
+                    <button name="action_confirm" data-hotkey="v" string="Confirmar" type="object" attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
+                    <button name="action_cancel" type="object" string="Cancelar" attrs="{'invisible': ['|', ('state', 'not in', ['draft','confirm']), ('id', '=', False)]}" data-hotkey="z"/>
+                    <button name="action_draft" states="cancel" type="object" string="Convertir a borrador" data-hotkey="w"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,cancel"/>
                 </header>
                 <sheet>
@@ -25,12 +21,13 @@
                             <field name="application_datetime"/>
                         </group>
                         <group string="Identificación Solicitante">
-                            <field name="applicant_name"/>
+                            <field name="partner_id" />
+                            <!-- <field name="applicant_name"/>
                             <field name="applicant_type" widget='radio'/>
                             <field name="contact_name"/>
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email"/>
-                            <field name="service_type_requested" widget='radio'/>
+                            <field name="service_type_requested" widget='radio'/> -->
                             <field name="observations"/>
                             <field name="file"/>
                         </group>
@@ -57,26 +54,26 @@
         <field name="name">survey.custom.view.tree</field>
         <field name="model">survey.custom</field>
         <field name="arch" type="xml">
-            <tree string="Encuesta">
+            <tree string="Solicitudes de Factibilidad">
+                <field name="partner_id" />
                 <field name="assigned_zone_cl_id"/>
                 <field name="applicant_world_partner_id"/>
                 <field name="applicant_type_world"/>
                 <field name="points_request_number"/>
                 <field name="application_datetime"/>
-                <field name="applicant_name"/>
+                <!-- <field name="applicant_name"/>
                 <field name="applicant_type"/>
                 <field name="contact_name"/>
                 <field name="phone"/>
-                <field name="email"/>
+                <field name="email"/> -->
             </tree>
         </field>
     </record>
     <record id="survey_custom_action" model="ir.actions.act_window">
-        <field name="name">Encuesta</field>
+        <field name="name">Solicitudes de Factibilidad</field>
         <field name="res_model">survey.custom</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem id="survey_custom_menu" name="Encuesta" sequence="10"/>
-    <menuitem id="survey_custom_views_menu" name="Encuestas" action="survey_custom_action"
-        parent="survey_custom_menu" sequence="10"/>
+    <menuitem id="survey_custom_menu" name="Solicitudes de Factibilidad" sequence="10"/>
+    <menuitem id="survey_custom_views_menu" name="Encuestas" action="survey_custom_action" parent="survey_custom_menu" sequence="10"/>
 </odoo>
