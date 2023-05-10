@@ -27,52 +27,75 @@ odoo.define('widget_map.FieldMap', function (require) {
 			search.bindTo('bounds', this.map);
 
 			search.addListener('place_changed', function () {
-				information.close();
-				self.marker.setVisible(false);
-				var place = search.getPlace();
-				if (!place.geometry.viewport) {
-					window.alert('Error');
-					return;
-				}
-				if (place.geometry.viewport) {
-					self.map.fitBounds(place.geometry.viewport);
-					self._setValue(JSON.stringify({position: place.geometry.location, zoom: self.map.getZoom()}));
-				} else {
-					self.map.setCenter(place.geometry.location);
+				if (self.mode === 'edit') {
+					// information.close();
+					// self.marker.setVisible(false);
+					var place = search.getPlace();
+					if (!place.geometry.viewport) {
+						window.alert('Error');
+						return;
+					}
+					if (place.geometry.viewport) {
+						self.map.fitBounds(place.geometry.viewport);
+						self.marker.setPosition(place.geometry.location);
+						self._setValue(JSON.stringify({position: place.geometry.location, zoom: self.map.getZoom()}));
+					} else {
+						self.map.setCenter(place.geometry.location);
+					}
 				}
 			});
 
 			this.map.addListener('click', function (e) {
-				if (!self.get('effective_readonly') && self.marker.getMap() == null) {
-					self.marker.setPosition(e.latLng);
-					self.marker.setMap(self.map);
-					self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+				if (self.mode === 'edit') {
+					if (!self.get('effective_readonly') && self.marker.getMap() == null) {
+						self.marker.setPosition(e.latLng);
+						self.marker.setMap(self.map);
+						self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+					}
 				}
 			});
 			this.map.addListener('zoom_changed', function () {
-				if (!self.get('effective_readonly') && self.marker.getMap()) {
-					self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+				if (self.mode === 'edit') {
+					if (!self.get('effective_readonly') && self.marker.getMap()) {
+						self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+					}
 				}
 			});
 			this.marker.addListener('click', function () {
-				if (!self.get('effective_readonly')) {
-					self.marker.setMap(null);
-					self._setValue(false);
+				if (self.mode === 'edit') {
+					if (!self.get('effective_readonly')) {
+						self.marker.setMap(null);
+						self._setValue(false);
+					}
 				}
 			});
 			this.marker.addListener('dragend', function () {
-				self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+				if (self.mode === 'edit') {
+					self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+				}
 			});
 			this.getParent()
 				.$('a[data-toggle="tab"]')
 				.on('shown.bs.tab', function () {
-					self.trigger('resize');
+					if (self.mode === 'edit') {
+						self.trigger('resize');
+					}
 				});
 			this.getParent().on('attached', this.getParent(), function () {
-				self.trigger('resize');
+				if (self.mode === 'edit') {
+					self.trigger('resize');
+				}
 			});
-			this.on('change:effective_readonly', this, this.update_mode);
-			this.on('resize', this, this._toggle_label);
+			this.on('change:effective_readonly', this, function () {
+				if (self.mode === 'edit') {
+					this.update_mode;
+				}
+			});
+			this.on('resize', this, function () {
+				if (self.mode === 'edit') {
+					this._toggle_label;
+				}
+			});
 			this.update_mode();
 			this._super();
 		},
