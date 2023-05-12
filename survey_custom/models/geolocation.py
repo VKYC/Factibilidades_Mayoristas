@@ -10,6 +10,10 @@ class Geolocation(models.Model):
     latitude = fields.Float('Latitude', digits=(12,7))
     survey_custom_id = fields.Many2one('survey.custom', string='Survey Custom')
 
+    _sql_constraints = [
+        ("ub_unique", "unique(survey_custom_id, longitude, latitude)", "La ubicación debe ser única."),
+    ]
+
     def _compute_name_longitude_latitude(self):
         for record in self:
             record.name = f"{record.longitude}:{record.latitude}"

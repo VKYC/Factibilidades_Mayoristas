@@ -91,15 +91,16 @@ class SurveyCustom(models.Model):
             'longitude': self.longitude,
             'latitude': self.latitude,
         }
-        self.geolocation_ids = [(0, 0, record_data)]
-
+        if self.points_request_number > len(self.geolocation_ids):
+            self.geolocation_ids = [(0, 0, record_data)]
+        else:
+            raise UserError("Está intentando agregando una cantidad de geolocalizaciones mayor a la cantidad de puntos solicitados.")
 
     @api.constrains('points_request_number')
     def _constrains_points_request_number(self):
         for record in self:
             if record.points_request_number <= 0:
                 raise UserError("La cantidad de puntos debe de ser mayor a 0.")
-   
 
     def action_confirm(self):
         # vals={
