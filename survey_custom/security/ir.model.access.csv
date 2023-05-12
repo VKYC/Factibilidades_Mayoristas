@@ -1,4 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_survey_custom_all,survey.custom.all,model_survey_custom,,1,1,1,1
 access_assigned_zone_cl_all,assigned.zone.cl.all,model_assigned_zone_cl,,1,1,1,1
+access_geolocation_all,geolocation.all,model_geolocation,,1,1,1,1
+
 

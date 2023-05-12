@@ -7,7 +7,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 	var FieldMap = AbstractField.extend({
 		template: 'FieldMap',
 		supportedFieldTypes: ['char'],
-		isQuickEditable: false,
+		// isQuickEditable: false,
 
 		start: function () {
 			var self = this;
@@ -61,6 +61,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 					}
 				}
 			});
+
 			this.marker.addListener('click', function () {
 				if (self.mode === 'edit') {
 					if (!self.get('effective_readonly')) {

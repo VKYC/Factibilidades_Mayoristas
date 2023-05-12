@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+import json
 
 class SurveyCustom(models.Model):
     _name = 'survey.custom'
@@ -55,6 +56,42 @@ class SurveyCustom(models.Model):
         ('medium', 'Media'),
         ('low', 'Baja'),
     ], string='Prioridad')
+
+    # * Longitud y latitud
+    longitude = fields.Float('Longitude', compute='_compute_longitude_latitude', store=True, digits=(12,7), readonly=False)
+    latitude = fields.Float('Latitude', compute='_compute_longitude_latitude', store=True, digits=(12,7), readonly=False)
+    geolocation_ids = fields.One2many('geolocation', 'survey_custom_id', string='geolocation')
+
+    @api.depends('geolocation')
+    def _compute_longitude_latitude(self):
+        for record in self:
+            if record.geolocation:
+                loc = json.loads(record.geolocation)
+                position = loc.get('position')
+                record.longitude = position.get('lng')
+                record.latitude = position.get('lat')
+            else:
+                record.longitude = 0
+                record.latitude = 0
+
+    @api.onchange('longitude', 'latitude')
+    def _inverse_geolocation_longitude_latitude(self):
+        for record in self:
+            geolocation = {
+                'position': {
+                    'lng': record.longitude,
+                    'lat': record.latitude,
+                },
+                'zoom': 5
+            }
+            record.geolocation = json.dumps(geolocation)
+
+    def add_geolocation(self):
+        record_data = {
+            'longitude': self.longitude,
+            'latitude': self.latitude,
+        }
+        self.geolocation_ids = [(0, 0, record_data)]
 
 
     @api.constrains('points_request_number')

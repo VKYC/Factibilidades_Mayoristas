@@ -34,14 +34,33 @@
                         <group string="Ubicación Solicitante">
                             <field name="address"/>
                             <field name="comuna_id"/>
-                            <field name="geolocation" widget="map"/>
+                            <field name="longitude"/>
+                            <field name="latitude"/>
+                            <button name="add_geolocation" type="object" string="Agregar localización"/>
+
                         </group>
                         <group name="others" string="Información a considerar">
                             <field name="requires_access_validation"/>
                             <field name="priority" widget="radio"/>
                         </group>
+
                     </group>
+                    <group class="col-12">
+                        <field name="geolocation" widget="map" style="width=100%;"/>
+                    </group>
+                    <notebook>
+                        <page name="geolocation" string="Localización">
+                            <field name="geolocation_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="longitude"/>
+                                    <field name="latitude"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
+
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>

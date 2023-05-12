@@ -3,7 +3,7 @@
     <t t-name="FieldMap">
         <t>
             <input type="text" class="autocomplete"/>
-            <div class="codeup_gmap">
+            <div class="codeup_gmap col-12">
             </div>
         </t>
     </t>
