@@ -14,48 +14,59 @@
                 <sheet>
                     <group>
                         <group string="Identificación Mundo">
-                            <field name="assigned_zone_cl_id"/>
-                            <field name="applicant_world_partner_id"/>
-                            <field name="applicant_type_world" widget='radio'/>
-                            <field name="points_request_number"/>
-                            <field name="application_datetime"/>
+                            <field name="assigned_zone_cl_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="applicant_world_partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="applicant_type_world" widget='radio' attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="points_request_number" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="application_datetime" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
                         <group string="Identificación Solicitante">
-                            <field name="partner_id" />
+                            <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <!-- <field name="applicant_name"/>
                             <field name="applicant_type" widget='radio'/>
                             <field name="contact_name"/>
                             <field name="phone" widget="phone"/>
                             <field name="email" widget="email"/>
                             <field name="service_type_requested" widget='radio'/> -->
-                            <field name="observations"/>
-                            <field name="file"/>
+                            <field name="observations" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="file" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
                         <group string="Ubicación Solicitante">
-                            <field name="address"/>
-                            <field name="comuna_id"/>
-                            <field name="longitude"/>
-                            <field name="latitude"/>
+                            <field name="address" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="comuna_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="longitude" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="latitude" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <button name="add_geolocation" type="object" string="Agregar localización"/>
 
                         </group>
                         <group name="others" string="Información a considerar">
-                            <field name="requires_access_validation"/>
-                            <field name="priority" widget="radio"/>
+                            <field name="requires_access_validation" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="priority" widget="radio" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
 
                     </group>
                     <group class="col-12">
-                        <field name="geolocation" widget="map" style="width=100%;"/>
+                        <field name="geolocation" widget="map" style="width=100%;" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                     </group>
                     <notebook>
                         <page name="geolocation" string="Localización">
-                            <field name="geolocation_ids">
+                            <field name="geolocation_ids" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}">
                                 <tree>
                                     <field name="name"/>
                                     <field name="longitude"/>
                                     <field name="latitude"/>
                                 </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                        </group>
+                                        <group>
+                                            <field name="longitude"/>
+                                            <field name="latitude"/>
+                                        </group>
+                                    </group>
+                                </form>
                             </field>
                         </page>
                     </notebook>
