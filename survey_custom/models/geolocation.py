@@ -14,6 +14,7 @@ class Geolocation(models.Model):
         ("ub_unique", "unique(survey_custom_id, longitude, latitude)", "La ubicación debe ser única."),
     ]
 
+    @api.depends('longitude', 'latitude')
     def _compute_name_longitude_latitude(self):
         for record in self:
             record.name = f"{record.longitude}:{record.latitude}"
