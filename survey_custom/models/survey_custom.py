@@ -99,8 +99,8 @@ class SurveyCustom(models.Model):
     @api.constrains('points_request_number')
     def _constrains_points_request_number(self):
         for record in self:
-            if record.points_request_number <= 0:
-                raise UserError("La cantidad de puntos debe de ser mayor a 0.")
+            if record.points_request_number <= 0 or record.points_request_number > 50:
+                raise UserError("La cantidad de puntos debe de ser mayor a 0, ni mayor a 50.")
             
     def _constrains_points_request_number_geolocation_ids(self, ):
         geolocations = self.geolocation_ids
