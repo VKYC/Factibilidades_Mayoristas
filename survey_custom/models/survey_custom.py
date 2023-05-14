@@ -101,12 +101,20 @@ class SurveyCustom(models.Model):
         for record in self:
             if record.points_request_number <= 0:
                 raise UserError("La cantidad de puntos debe de ser mayor a 0.")
+            
+    def _constrains_points_request_number_geolocation_ids(self, ):
+        geolocations = self.geolocation_ids
+        points_request_number = self.points_request_number
+
+        if len(geolocations) != points_request_number:
+            raise UserError("La cantidad de geolocalizaciones agregadas es menor a la cantidad de puntos solicitados.")
 
     def action_confirm(self):
         # vals={
 
         # }
         # self.env[model].create(vals)
+        self._constrains_points_request_number_geolocation_ids()
         self.write({'state': 'confirm'})
 
     def action_cancel(self):
