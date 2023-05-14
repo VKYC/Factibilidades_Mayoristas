@@ -123,3 +123,8 @@ class SurveyCustom(models.Model):
     def action_draft(self):
         self.write({'state': 'draft'})
 
+    def unlink(self):
+        if self.state == 'confirm':
+            raise UserError('No puede eliminar un registro confirmado.')
+        return super(SurveyCustom, self).unlink()
+
