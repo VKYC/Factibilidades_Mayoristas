@@ -12,7 +12,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 		start: function () {
 			var self = this;
 			var autocomplete = this.$el[0];
-			var information = new google.maps.InfoWindow();
+			this.information = new google.maps.InfoWindow();
 
 			this.map = new google.maps.Map(this.$el[2], {
 				center: {lat: 0, lng: 0},
@@ -23,25 +23,45 @@ odoo.define('widget_map.FieldMap', function (require) {
 				position: {lat: 0, lng: 0},
 			});
 
-			const search = new google.maps.places.Autocomplete(autocomplete);
-			search.bindTo('bounds', this.map);
+			this.search = new google.maps.places.Autocomplete(autocomplete);
+			this.search.bindTo('bounds', this.map);
 
-			search.addListener('place_changed', function () {
+			this.search.addListener('place_changed', function () {
 				if (self.mode === 'edit') {
-					// information.close();
-					// self.marker.setVisible(false);
-					var place = search.getPlace();
+					self.information.close();
+					self.marker.setVisible(false);
+					var place = self.search.getPlace();
 					if (!place.geometry.viewport) {
 						window.alert('Error');
 						return;
 					}
+
 					if (place.geometry.viewport) {
 						self.map.fitBounds(place.geometry.viewport);
 						self.marker.setPosition(place.geometry.location);
-						self._setValue(JSON.stringify({position: place.geometry.location, zoom: self.map.getZoom()}));
 					} else {
 						self.map.setCenter(place.geometry.location);
+						self.setZoom(18);
 					}
+					self.marker.setPosition(place.geometry.location);
+					self.marker.setVisible(true);
+					var value = JSON.stringify({
+						position: place.geometry.location,
+						zoom: self.map.getZoom(),
+						autocomplete: self.search.gm_accessors_.place.Rj.formattedPrediction,
+					});
+
+					self._setValue(value);
+					var address = '';
+					if (place.address_components) {
+						address = [
+							(place.address_components[0] && place.address_components[0].short_name) || '',
+							(place.address_components[1] && place.address_components[1].short_name) || '',
+							(place.address_components[2] && place.address_components[2].short_name) || '',
+						];
+					}
+					self.information.setContent('<div> <strong>' + place.name + '</strong><br>' + address + '</div>');
+					self.information.open(self.map, self.marker);
 				}
 			});
 
@@ -50,14 +70,29 @@ odoo.define('widget_map.FieldMap', function (require) {
 					if (!self.get('effective_readonly') && self.marker.getMap() == null) {
 						self.marker.setPosition(e.latLng);
 						self.marker.setMap(self.map);
-						self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+						self._setValue(
+							JSON.stringify({
+								position: self.marker.getPosition(),
+								zoom: self.map.getZoom(),
+								autocomplete: self.search.gm_accessors_.place.Rj.formattedPrediction,
+							})
+						);
 					}
+					// if (!self.get('effective_readonly') && self.marker.getMap()) {
+					// 	self.render_value();
+					// }
 				}
 			});
 			this.map.addListener('zoom_changed', function () {
 				if (self.mode === 'edit') {
 					if (!self.get('effective_readonly') && self.marker.getMap()) {
-						self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+						self._setValue(
+							JSON.stringify({
+								position: self.marker.getPosition(),
+								zoom: self.map.getZoom(),
+								autocomplete: self.search.gm_accessors_.place.Rj.formattedPrediction,
+							})
+						);
 					}
 				}
 			});
@@ -72,7 +107,14 @@ odoo.define('widget_map.FieldMap', function (require) {
 			});
 			this.marker.addListener('dragend', function () {
 				if (self.mode === 'edit') {
-					self._setValue(JSON.stringify({position: self.marker.getPosition(), zoom: self.map.getZoom()}));
+					self.information.open(self.map, self.marker);
+					self._setValue(
+						JSON.stringify({
+							position: self.marker.getPosition(),
+							zoom: self.map.getZoom(),
+							autocomplete: self.search.gm_accessors_.place.Rj.formattedPrediction,
+						})
+					);
 				}
 			});
 			this.getParent()
