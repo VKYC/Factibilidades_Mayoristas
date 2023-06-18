@@ -48,7 +48,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 					var value = JSON.stringify({
 						position: place.geometry.location,
 						zoom: self.map.getZoom(),
-						autocomplete: self.search.gm_accessors_.place.Rj.formattedPrediction,
+						autocomplete: self.search.gm_accessors_.place.Uj.formattedPrediction,
 					});
 
 					self._setValue(value);
@@ -74,7 +74,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 							JSON.stringify({
 								position: self.marker.getPosition(),
 								zoom: self.map.getZoom(),
-								autocomplete: self.search.gm_accessors_.place.Rj.formattedPrediction,
+								autocomplete: self.search.gm_accessors_.place.Uj.formattedPrediction,
 							})
 						);
 					}
@@ -90,7 +90,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 							JSON.stringify({
 								position: self.marker.getPosition(),
 								zoom: self.map.getZoom(),
-								autocomplete: self.search.gm_accessors_.place.Rj.formattedPrediction,
+								autocomplete: self.search.gm_accessors_.place.Uj.formattedPrediction,
 							})
 						);
 					}
@@ -112,7 +112,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 						JSON.stringify({
 							position: self.marker.getPosition(),
 							zoom: self.map.getZoom(),
-							autocomplete: self.search.gm_accessors_.place.Rj.formattedPrediction,
+							autocomplete: self.search.gm_accessors_.place.Uj.formattedPrediction,
 						})
 					);
 				}
