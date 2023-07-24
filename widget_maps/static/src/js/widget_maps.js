@@ -11,7 +11,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 
 		start: function () {
 			var self = this;
-			var autocomplete = this.$el[0];
+			this.autocomplete = this.$el[0];
 			this.information = new google.maps.InfoWindow();
 
 			this.map = new google.maps.Map(this.$el[2], {
@@ -23,8 +23,14 @@ odoo.define('widget_map.FieldMap', function (require) {
 				position: {lat: 0, lng: 0},
 			});
 
-			this.search = new google.maps.places.Autocomplete(autocomplete);
+			this.search = new google.maps.places.Autocomplete(this.autocomplete);
 			this.search.bindTo('bounds', this.map);
+
+			$(this.autocomplete).change(function () {
+				console.log('auto');
+			});
+
+			this.call('bus_service', 'onNotification', this, this._onLongpollingNotifications);
 
 			this.search.addListener('place_changed', function () {
 				if (self.mode === 'edit') {
@@ -50,7 +56,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 						zoom: self.map.getZoom(),
 						autocomplete:
 							self.search.gm_accessors_.place.Uj === undefined
-								? ''
+								? self.autocomplete.value
 								: self.search.gm_accessors_.place.Uj.formattedPrediction,
 					});
 
@@ -62,6 +68,8 @@ odoo.define('widget_map.FieldMap', function (require) {
 							(place.address_components[1] && place.address_components[1].short_name) || '',
 							(place.address_components[2] && place.address_components[2].short_name) || '',
 						];
+					} else {
+						address = self.autocomplete.value;
 					}
 					self.information.setContent('<div> <strong>' + place.name + '</strong><br>' + address + '</div>');
 					self.information.open(self.map, self.marker);
@@ -79,14 +87,11 @@ odoo.define('widget_map.FieldMap', function (require) {
 								zoom: self.map.getZoom(),
 								autocomplete:
 									self.search.gm_accessors_.place.Uj === undefined
-										? ''
+										? self.autocomplete.value
 										: self.search.gm_accessors_.place.Uj.formattedPrediction,
 							})
 						);
 					}
-					// if (!self.get('effective_readonly') && self.marker.getMap()) {
-					// 	self.render_value();
-					// }
 				}
 			});
 			this.map.addListener('zoom_changed', function () {
@@ -98,7 +103,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 								zoom: self.map.getZoom(),
 								autocomplete:
 									self.search.gm_accessors_.place.Uj === undefined
-										? ''
+										? self.autocomplete.value
 										: self.search.gm_accessors_.place.Uj.formattedPrediction,
 							})
 						);
@@ -123,7 +128,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 							zoom: self.map.getZoom(),
 							autocomplete:
 								self.search.gm_accessors_.place.Uj === undefined
-									? ''
+									? self.autocomplete.value
 									: self.search.gm_accessors_.place.Uj.formattedPrediction,
 						})
 					);
@@ -141,6 +146,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 					self.trigger('resize');
 				}
 			});
+
 			this.on('change:effective_readonly', this, function () {
 				if (self.mode === 'edit') {
 					this.update_mode;
@@ -154,11 +160,24 @@ odoo.define('widget_map.FieldMap', function (require) {
 			this.update_mode();
 			this._super();
 		},
+
+		async _onLongpollingNotifications(notifications) {
+			for (const {type} of notifications) {
+				if (type === 'onchange_geolocation') {
+					console.log('onchange_geolocation');
+					if (this.value) {
+						$(this.autocomplete).val(JSON.parse(this.value).autocomplete);
+					}
+				}
+			}
+		},
+
 		render_value: function () {
 			if (this.value) {
 				this.marker.setPosition(JSON.parse(this.value).position);
 				this.map.setCenter(JSON.parse(this.value).position);
 				this.map.setZoom(JSON.parse(this.value).zoom);
+				$(this.autocomplete).val(JSON.parse(this.value).autocomplete);
 				this.marker.setMap(this.map);
 			} else {
 				this.marker.setPosition({lat: 0, lng: 0});

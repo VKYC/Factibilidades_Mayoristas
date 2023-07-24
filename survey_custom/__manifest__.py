@@ -1,28 +1,21 @@
 {
-    'name': 'Encuesta',
-    'version': '1.0',
-    'description': '',
-    'summary': '',
-    'author': 'Jhon Jairo Rojas Ortiz',
-    'website': '',
-    'license': 'LGPL-3',
-    'category': '',
-    'depends': [
-        'base',
-        'portal',
-        'base_address_city'
+    "name": "Encuesta",
+    "version": "1.0",
+    "description": "",
+    "summary": "",
+    "author": "Jhon Jairo Rojas Ortiz",
+    "website": "",
+    "license": "LGPL-3",
+    "category": "",
+    "depends": ["base", "portal", "base_address_city"],
+    "data": [
+        "data/ir_sequence.xml",
+        "security/ir.model.access.csv",
+        "views/survey_custom.xml",
+        "views/assigned_zone_cl.xml",
     ],
-    'data': [
-        'security/ir.model.access.csv',
-        'views/survey_custom.xml',
-        'views/assigned_zone_cl.xml',
-    ],
-    'demo': [
-        
-    ],
-    'auto_install': False,
-    'application': True,
-    'assets': {
-        
-    }
+    "demo": [],
+    "auto_install": False,
+    "application": True,
+    "assets": {},
 }

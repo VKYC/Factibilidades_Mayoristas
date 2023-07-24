@@ -1,6 +1,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 import json
+from datetime import datetime
 
 
 class SurveyCustom(models.Model):
@@ -80,12 +81,14 @@ class SurveyCustom(models.Model):
         "Dirección",
         required=True,
         compute="_compute_longitude_latitude",
+        inverse="_inverse_geolocation_longitude_latitude",
         store=True,
         readonly=False,
     )
     longitude = fields.Float(
         "Longitude",
         compute="_compute_longitude_latitude",
+        inverse="_inverse_geolocation_longitude_latitude",
         store=True,
         digits=(12, 7),
         readonly=False,
@@ -93,12 +96,17 @@ class SurveyCustom(models.Model):
     latitude = fields.Float(
         "Latitude",
         compute="_compute_longitude_latitude",
+        inverse="_inverse_geolocation_longitude_latitude",
         store=True,
         digits=(12, 7),
         readonly=False,
     )
     zoom = fields.Float(
-        "Zoom", compute="_compute_longitude_latitude", store=True, readonly=False
+        "Zoom",
+        compute="_compute_longitude_latitude",
+        inverse="_inverse_geolocation_longitude_latitude",
+        store=True,
+        readonly=False,
     )
     geolocation_ids = fields.One2many(
         "geolocation", "survey_custom_id", string="geolocation"
@@ -122,7 +130,7 @@ class SurveyCustom(models.Model):
                 record.zoom = 0
                 record.address = ""
 
-    @api.onchange("longitude", "latitude", "address")
+    @api.onchange("longitude", "latitude", "address", "zoom")
     def _inverse_geolocation_longitude_latitude(self):
         for record in self:
             geolocation = {
@@ -130,10 +138,15 @@ class SurveyCustom(models.Model):
                     "lng": record.longitude,
                     "lat": record.latitude,
                 },
-                "zoom": record.zoom,
                 "autocomplete": record.address,
+                "zoom": record.zoom,
             }
             record.geolocation = json.dumps(geolocation)
+            self.env["bus.bus"]._sendone(
+                self.env.user.partner_id,
+                "onchange_geolocation",
+                {},
+            )
 
     def add_geolocation(self):
         record_data = {
