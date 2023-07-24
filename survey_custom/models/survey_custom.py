@@ -24,7 +24,7 @@ class SurveyCustom(models.Model):
     )
 
     # * World
-    name = fields.Char("Nombre", related="partner_id.name")
+    name = fields.Char("Nombre")
 
     assigned_zone_cl_id = fields.Many2one("assigned.zone.cl", string="Zona asignada")
     applicant_world_partner_id = fields.Many2one(
@@ -198,3 +198,12 @@ class SurveyCustom(models.Model):
         if self.state == "confirm":
             raise UserError("No puede eliminar un registro confirmado.")
         return super(SurveyCustom, self).unlink()
+
+    @api.model
+    def create(self, vals):
+        if vals.get("name", _("New")) == _("New"):
+            vals["name"] = self.env["ir.sequence"].next_by_code(
+                "seq.factibilidades"
+            ) or _("New")
+            result = super(SurveyCustom, self).create(vals)
+            return result
