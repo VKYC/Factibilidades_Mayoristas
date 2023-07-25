@@ -166,7 +166,65 @@ odoo.define('widget_map.FieldMap', function (require) {
 				if (type === 'onchange_geolocation') {
 					console.log('onchange_geolocation');
 					if (this.value) {
-						$(this.autocomplete).val(JSON.parse(this.value).autocomplete);
+						var inputText = JSON.parse(this.value).autocomplete;
+						var request = {
+							// location: pyrmont,
+							// radius: '500',
+							query: inputText,
+						};
+						$(this.autocomplete).val(inputText);
+						var service = new google.maps.places.PlacesService(this.map);
+						var place;
+						var self = this;
+
+						function callback(results, status) {
+							if (status == google.maps.places.PlacesServiceStatus.OK) {
+								if (results.length > 0) {
+									place = results[0];
+									self.information.close();
+									self.marker.setVisible(false);
+
+									if (!place.geometry.viewport) {
+										window.alert('Error');
+										return;
+									}
+
+									if (place.geometry.viewport) {
+										self.map.fitBounds(place.geometry.viewport);
+										self.marker.setPosition(place.geometry.location);
+									} else {
+										self.map.setCenter(place.geometry.location);
+										self.setZoom(18);
+									}
+									self.marker.setPosition(place.geometry.location);
+									self.marker.setVisible(true);
+									var value = JSON.stringify({
+										position: place.geometry.location,
+										zoom: self.map.getZoom(),
+										autocomplete:
+											self.search.gm_accessors_.place.Uj === undefined
+												? self.autocomplete.value
+												: self.search.gm_accessors_.place.Uj.formattedPrediction,
+									});
+
+									self._setValue(value);
+									var address = '';
+									if (place.address_components) {
+										address = [
+											(place.address_components[0] && place.address_components[0].short_name) || '',
+											(place.address_components[1] && place.address_components[1].short_name) || '',
+											(place.address_components[2] && place.address_components[2].short_name) || '',
+										];
+									} else {
+										address = self.autocomplete.value;
+									}
+									self.information.setContent('<div> <strong>' + place.name + '</strong><br>' + address + '</div>');
+									self.information.open(self.map, self.marker);
+								}
+							}
+						}
+
+						service.textSearch(request, callback);
 					}
 				}
 			}

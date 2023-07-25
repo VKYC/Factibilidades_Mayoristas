@@ -22,12 +22,7 @@
                         </group>
                         <group string="Identificación Solicitante">
                             <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
-                            <!-- <field name="applicant_name"/>
-                            <field name="applicant_type" widget='radio'/>
-                            <field name="contact_name"/>
-                            <field name="phone" widget="phone"/>
-                            <field name="email" widget="email"/>
-                            <field name="service_type_requested" widget='radio'/> -->
+                            <!-- <field name="applicant_name"/> <field name="applicant_type" widget='radio'/> <field name="contact_name"/> <field name="phone" widget="phone"/> <field name="email" widget="email"/> <field name="service_type_requested" widget='radio'/> -->
                             <field name="observations" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="file" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
@@ -36,14 +31,13 @@
                             <field name="comuna_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="longitude" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="latitude" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="zoom" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <button name="add_geolocation" type="object" string="Agregar localización"/>
-
                         </group>
                         <group name="others" string="Información a considerar">
                             <field name="requires_access_validation" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="priority" widget="radio" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
-
                     </group>
                     <group class="col-12">
                         <field name="geolocation" widget="map" style="width=100%;" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
@@ -71,7 +65,6 @@
                         </page>
                     </notebook>
                 </sheet>
-
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
@@ -85,17 +78,13 @@
         <field name="model">survey.custom</field>
         <field name="arch" type="xml">
             <tree string="Solicitudes de Factibilidad">
-                <field name="partner_id" />
+                <field name="partner_id"/>
                 <field name="assigned_zone_cl_id"/>
                 <field name="applicant_world_partner_id"/>
                 <field name="applicant_type_world"/>
                 <field name="points_request_number"/>
                 <field name="application_datetime"/>
-                <!-- <field name="applicant_name"/>
-                <field name="applicant_type"/>
-                <field name="contact_name"/>
-                <field name="phone"/>
-                <field name="email"/> -->
+                <!-- <field name="applicant_name"/> <field name="applicant_type"/> <field name="contact_name"/> <field name="phone"/> <field name="email"/> -->
             </tree>
         </field>
     </record>
