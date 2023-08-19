@@ -4,7 +4,7 @@
         <field name="name">survey.custom.view.form</field>
         <field name="model">survey.custom</field>
         <field name="arch" type="xml">
-            <form string="Solicitudes de Factibilidad">
+            <form string="Mis Solicitudes">
                 <header>
                     <button name="action_confirm" data-hotkey="v" string="Confirmar" type="object" attrs="{'invisible': [('state', 'not in', ['draft'])]}"/>
                     <button name="action_cancel" type="object" string="Cancelar" attrs="{'invisible': ['|', ('state', 'not in', ['draft','confirm']), ('id', '=', False)]}" data-hotkey="z"/>
@@ -14,8 +14,9 @@
                 <sheet>
                     <group>
                         <group string="Identificación Mundo">
-                            <field name="assigned_zone_cl_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
-                            <field name="applicant_world_partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <!-- <field name="assigned_zone_cl_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="applicant_world_partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
+                            <field name="user_id" readonly="1"/>
                             <field name="applicant_type_world" widget='radio' attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="points_request_number" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="application_datetime" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
@@ -77,10 +78,11 @@
         <field name="name">survey.custom.view.tree</field>
         <field name="model">survey.custom</field>
         <field name="arch" type="xml">
-            <tree string="Solicitudes de Factibilidad">
+            <tree string="Mis Solicitudes">
                 <field name="partner_id"/>
-                <field name="assigned_zone_cl_id"/>
-                <field name="applicant_world_partner_id"/>
+                <field name="user_id"/>
+                <!-- <field name="assigned_zone_cl_id"/>
+                <field name="applicant_world_partner_id"/> -->
                 <field name="applicant_type_world"/>
                 <field name="points_request_number"/>
                 <field name="application_datetime"/>
@@ -89,10 +91,10 @@
         </field>
     </record>
     <record id="survey_custom_action" model="ir.actions.act_window">
-        <field name="name">Solicitudes de Factibilidad</field>
+        <field name="name">Mis Solicitudes</field>
         <field name="res_model">survey.custom</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem id="survey_custom_menu" name="Solicitudes de Factibilidad" sequence="10"/>
+    <menuitem id="survey_custom_menu" name="Mis Solicitudes" sequence="10"/>
     <menuitem id="survey_custom_views_menu" name="Encuestas" action="survey_custom_action" parent="survey_custom_menu" sequence="10"/>
 </odoo>

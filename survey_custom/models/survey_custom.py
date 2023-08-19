@@ -26,10 +26,11 @@ class SurveyCustom(models.Model):
     # * World
     name = fields.Char("Nombre")
 
-    assigned_zone_cl_id = fields.Many2one("assigned.zone.cl", string="Zona asignada")
-    applicant_world_partner_id = fields.Many2one(
-        "res.partner", string="Solicitante Mundo"
-    )
+    # assigned_zone_cl_id = fields.Many2one("assigned.zone.cl", string="Zona asignada")
+    # applicant_world_partner_id = fields.Many2one(
+    #     "res.partner", string="Solicitante Mundo"
+    # )
+    user_id = fields.Many2one('res.users', 'Usuario actualmente conectado', default=lambda self: self.env.user.id, readonly=True)
     applicant_type_world = fields.Selection(
         [
             ("business_area", "Área empresas"),
