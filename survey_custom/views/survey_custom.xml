@@ -31,7 +31,8 @@
                             <field name="comuna_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="longitude" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="latitude" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
-                            <field name="zoom" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <!-- <field name="zoom" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
+                            <field name="zoom" readonly="1"/>
                             <button name="add_geolocation" type="object" string="Agregar localización"/>
                         </group>
                         <group name="others" string="Información a considerar">
