@@ -43,7 +43,7 @@ class SurveyCustom(models.Model):
     points_request_number = fields.Integer(
         "Cantidad de puntos solicitados", required=True
     )
-    application_datetime = fields.Datetime("Fecha de solicitud")
+    application_date = fields.Date("Fecha de solicitud")
 
     # * Applicant Identification
     partner_id = fields.Many2one("res.partner", string="Socio")
@@ -168,6 +168,14 @@ class SurveyCustom(models.Model):
             if record.points_request_number <= 0 or record.points_request_number > 50:
                 raise UserError(
                     "La cantidad de puntos debe de ser mayor a 0, ni mayor a 50."
+                )
+
+    @api.constrains('application_date')
+    def _constrains_application_date(self):
+        for record in self:
+            if record.application_date < datetime.now().date():
+                raise UserError(
+                    "La fecha de solicitud no puede ser menor a la fecha actual."
                 )
 
     def _constrains_points_request_number_geolocation_ids(

@@ -14,12 +14,11 @@
                 <sheet>
                     <group>
                         <group string="Identificación Mundo">
-                            <!-- <field name="assigned_zone_cl_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
-                            <field name="applicant_world_partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
+                            <!-- <field name="assigned_zone_cl_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> <field name="applicant_world_partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
                             <field name="user_id" readonly="1"/>
                             <field name="applicant_type_world" widget='radio' attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="points_request_number" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
-                            <field name="application_datetime" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="application_date" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
                         <group string="Identificación Solicitante">
                             <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
@@ -81,11 +80,10 @@
             <tree string="Mis Solicitudes">
                 <field name="partner_id"/>
                 <field name="user_id"/>
-                <!-- <field name="assigned_zone_cl_id"/>
-                <field name="applicant_world_partner_id"/> -->
+                <!-- <field name="assigned_zone_cl_id"/> <field name="applicant_world_partner_id"/> -->
                 <field name="applicant_type_world"/>
                 <field name="points_request_number"/>
-                <field name="application_datetime"/>
+                <field name="application_date"/>
                 <!-- <field name="applicant_name"/> <field name="applicant_type"/> <field name="contact_name"/> <field name="phone"/> <field name="email"/> -->
             </tree>
         </field>
