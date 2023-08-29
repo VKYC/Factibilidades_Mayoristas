@@ -30,7 +30,7 @@ class SurveyCustom(models.Model):
     # applicant_world_partner_id = fields.Many2one(
     #     "res.partner", string="Solicitante Mundo"
     # )
-    user_id = fields.Many2one('res.users', 'Usuario actualmente conectado', default=lambda self: self.env.user.id, readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Usuario actualmente conectado', default=lambda self: self.env.user.partner_id.id, readonly=True)
     applicant_type_world = fields.Selection(
         [
             ("business_area", "Área empresas"),
@@ -46,7 +46,7 @@ class SurveyCustom(models.Model):
     application_date = fields.Date("Fecha de solicitud", required=True)
 
     # * Applicant Identification
-    partner_id = fields.Many2one("res.partner", string="Socio")
+    # partner_id = fields.Many2one("res.partner", string="Socio")
     # applicant_name = fields.Char('Empresa o Entidad Solicitante')
     # applicant_type = fields.Selection([
     #     ('public', 'Público'),

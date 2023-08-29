@@ -15,13 +15,13 @@
                     <group>
                         <group string="Identificación Mundo">
                             <!-- <field name="assigned_zone_cl_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> <field name="applicant_world_partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
-                            <field name="user_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
                             <field name="applicant_type_world" widget='radio' attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="points_request_number" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="application_date" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
                         <group string="Identificación Solicitante">
-                            <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <!-- <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
                             <!-- <field name="applicant_name"/> <field name="applicant_type" widget='radio'/> <field name="contact_name"/> <field name="phone" widget="phone"/> <field name="email" widget="email"/> <field name="service_type_requested" widget='radio'/> -->
                             <field name="observations" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="file" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
@@ -80,7 +80,7 @@
         <field name="arch" type="xml">
             <tree string="Mis Solicitudes">
                 <field name="partner_id"/>
-                <field name="user_id"/>
+                <!-- <field name="user_id"/> -->
                 <!-- <field name="assigned_zone_cl_id"/> <field name="applicant_world_partner_id"/> -->
                 <field name="applicant_type_world"/>
                 <field name="points_request_number"/>
