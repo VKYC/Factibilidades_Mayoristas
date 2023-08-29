@@ -15,20 +15,17 @@ odoo.define('widget_map.FieldMap', function (require) {
 			this.information = new google.maps.InfoWindow();
 
 			this.map = new google.maps.Map(this.$el[2], {
-				center: {lat: 0, lng: 0},
+				center: { lat: 0, lng: 0 },
 				zoom: 0,
 				disableDefaultUI: true,
 			});
 			this.marker = new google.maps.Marker({
-				position: {lat: 0, lng: 0},
+				position: { lat: 0, lng: 0 },
 			});
 
 			this.search = new google.maps.places.Autocomplete(this.autocomplete);
 			this.search.bindTo('bounds', this.map);
-
-			$(this.autocomplete).change(function () {
-				console.log('auto');
-			});
+			// this.search.setFields(['formatted_address', 'geometry', 'name']);
 
 			this.call('bus_service', 'onNotification', this, this._onLongpollingNotifications);
 
@@ -55,9 +52,7 @@ odoo.define('widget_map.FieldMap', function (require) {
 						position: place.geometry.location,
 						zoom: self.map.getZoom(),
 						autocomplete:
-							self.search.gm_accessors_.place.Uj === undefined
-								? self.autocomplete.value
-								: self.search.gm_accessors_.place.Uj.formattedPrediction,
+							self.getFormattedPrediction()
 					});
 
 					self._setValue(value);
@@ -71,8 +66,10 @@ odoo.define('widget_map.FieldMap', function (require) {
 					} else {
 						address = self.autocomplete.value;
 					}
-					self.information.setContent('<div> <strong>' + place.name + '</strong><br>' + address + '</div>');
-					self.information.open(self.map, self.marker);
+					if (address !== '') {
+						self.information.setContent('<div> <strong>' + place.name + '</strong><br>' + address + '</div>');
+						self.information.open(self.map, self.marker);
+					}
 				}
 			});
 
@@ -86,30 +83,26 @@ odoo.define('widget_map.FieldMap', function (require) {
 								position: self.marker.getPosition(),
 								zoom: self.map.getZoom(),
 								autocomplete:
-									self.search.gm_accessors_.place.Uj === undefined
-										? self.autocomplete.value
-										: self.search.gm_accessors_.place.Uj.formattedPrediction,
+									self.getFormattedPrediction()
 							})
 						);
 					}
 				}
 			});
-			this.map.addListener('zoom_changed', function () {
-				if (self.mode === 'edit') {
-					if (!self.get('effective_readonly') && self.marker.getMap()) {
-						self._setValue(
-							JSON.stringify({
-								position: self.marker.getPosition(),
-								zoom: self.map.getZoom(),
-								autocomplete:
-									self.search.gm_accessors_.place.Uj === undefined
-										? self.autocomplete.value
-										: self.search.gm_accessors_.place.Uj.formattedPrediction,
-							})
-						);
-					}
-				}
-			});
+			// this.map.addListener('zoom_changed', function () {
+			// 	if (self.mode === 'edit') {
+			// 		if (!self.get('effective_readonly') && self.marker.getMap()) {
+			// 			self._setValue(
+			// 				JSON.stringify({
+			// 					position: self.marker.getPosition(),
+			// 					zoom: self.map.getZoom(),
+			// 					autocomplete:
+			// 						self.getFormattedPrediction()
+			// 				})
+			// 			);
+			// 		}
+			// 	}
+			// });
 
 			this.marker.addListener('click', function () {
 				if (self.mode === 'edit') {
@@ -127,11 +120,11 @@ odoo.define('widget_map.FieldMap', function (require) {
 							position: self.marker.getPosition(),
 							zoom: self.map.getZoom(),
 							autocomplete:
-								self.search.gm_accessors_.place.Uj === undefined
-									? self.autocomplete.value
-									: self.search.gm_accessors_.place.Uj.formattedPrediction,
+								self.getFormattedPrediction(),
 						})
 					);
+					// self.marker.setPosition(place.geometry.location);
+					self.marker.setVisible(true);
 				}
 			});
 			this.getParent()
@@ -161,10 +154,22 @@ odoo.define('widget_map.FieldMap', function (require) {
 			this._super();
 		},
 
+		getFormattedPrediction: function () {
+			this.information.close();
+			// this.marker.setVisible(false);
+			var place = this.search.gm_accessors_.place
+			for (let key in place) {
+				if (place[key].formattedPrediction !== undefined) {
+					return place[key].formattedPrediction
+				}
+			}
+			return this.autocomplete.value
+		},
+
 		async _onLongpollingNotifications(notifications) {
-			for (const {type} of notifications) {
-				if (type === 'onchange_geolocation') {
-					console.log('onchange_geolocation');
+			for (const { type } of notifications) {
+				if (type === 'onchange_address') {
+					// console.log('onchange_geolocation');
 					if (this.value) {
 						var inputText = JSON.parse(this.value).autocomplete;
 						var request = {
@@ -202,9 +207,8 @@ odoo.define('widget_map.FieldMap', function (require) {
 										position: place.geometry.location,
 										zoom: self.map.getZoom(),
 										autocomplete:
-											self.search.gm_accessors_.place.Uj === undefined
-												? self.autocomplete.value
-												: self.search.gm_accessors_.place.Uj.formattedPrediction,
+											// self.getFormattedPrediction()
+											inputText
 									});
 
 									self._setValue(value);
@@ -218,8 +222,10 @@ odoo.define('widget_map.FieldMap', function (require) {
 									} else {
 										address = self.autocomplete.value;
 									}
-									self.information.setContent('<div> <strong>' + place.name + '</strong><br>' + address + '</div>');
-									self.information.open(self.map, self.marker);
+									if (address !== '') {
+										self.information.setContent('<div> <strong>' + place.name + '</strong><br>' + address + '</div>');
+										self.information.open(self.map, self.marker);
+									}
 								}
 							}
 						}
@@ -227,6 +233,28 @@ odoo.define('widget_map.FieldMap', function (require) {
 						service.textSearch(request, callback);
 					}
 				}
+				else {
+					if (type === 'onchange_longitude_latitude' && this.value) {
+						this.marker.setPosition(JSON.parse(this.value).position);
+						this.map.setCenter(JSON.parse(this.value).position);
+						this.map.setZoom(JSON.parse(this.value).zoom);
+						$(this.autocomplete).val(this.getFormattedPrediction());
+						this.marker.setMap(this.map);
+
+						this.marker.setVisible(true);
+
+						// var value = JSON.stringify({
+						// 	position: this.marker.getPosition(),
+						// 	zoom: this.map.getZoom(),
+						// 	autocomplete:
+						// 		this.getFormattedPrediction()
+						// });
+
+						// this._setValue(value);
+
+					}
+				}
+
 			}
 		},
 
@@ -238,8 +266,8 @@ odoo.define('widget_map.FieldMap', function (require) {
 				$(this.autocomplete).val(JSON.parse(this.value).autocomplete);
 				this.marker.setMap(this.map);
 			} else {
-				this.marker.setPosition({lat: 0, lng: 0});
-				this.map.setCenter({lat: 0, lng: 0});
+				this.marker.setPosition({ lat: 0, lng: 0 });
+				this.map.setCenter({ lat: 0, lng: 0 });
 				this.map.setZoom(2);
 				this.marker.setMap(null);
 			}

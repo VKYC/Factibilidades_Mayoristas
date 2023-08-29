@@ -43,7 +43,7 @@ class SurveyCustom(models.Model):
     points_request_number = fields.Integer(
         "Cantidad de puntos solicitados", required=True
     )
-    application_date = fields.Date("Fecha de solicitud")
+    application_date = fields.Date("Fecha de solicitud", required=True)
 
     # * Applicant Identification
     partner_id = fields.Many2one("res.partner", string="Socio")
@@ -82,7 +82,7 @@ class SurveyCustom(models.Model):
         "Dirección",
         required=True,
         compute="_compute_longitude_latitude",
-        inverse="_inverse_geolocation_longitude_latitude",
+        inverse="_inverse_geolocation_address",
         store=True,
         readonly=False,
     )
@@ -105,7 +105,7 @@ class SurveyCustom(models.Model):
     zoom = fields.Float(
         "Zoom",
         compute="_compute_longitude_latitude",
-        inverse="_inverse_geolocation_longitude_latitude",
+        inverse="_inverse_geolocation_address",
         store=True,
         readonly=False,
     )
@@ -131,7 +131,26 @@ class SurveyCustom(models.Model):
                 record.zoom = 0
                 record.address = ""
 
-    @api.onchange("longitude", "latitude", "address", "zoom")
+    @api.onchange("address", "zoom")
+    def _inverse_geolocation_address(self):
+        for record in self:
+            geolocation = {
+                "position": {
+                    "lng": record.longitude,
+                    "lat": record.latitude,
+                },
+                "autocomplete": record.address,
+                "zoom": record.zoom,
+            }
+            record.geolocation = json.dumps(geolocation)
+            if record.address != '':
+                self.env["bus.bus"]._sendone(
+                    self.env.user.partner_id,
+                    "onchange_address",
+                    {},
+                )
+
+    @api.onchange("longitude", "latitude")
     def _inverse_geolocation_longitude_latitude(self):
         for record in self:
             geolocation = {
@@ -145,7 +164,7 @@ class SurveyCustom(models.Model):
             record.geolocation = json.dumps(geolocation)
             self.env["bus.bus"]._sendone(
                 self.env.user.partner_id,
-                "onchange_geolocation",
+                "onchange_longitude_latitude",
                 {},
             )
 
