@@ -20,11 +20,24 @@
                             <field name="points_request_number" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="application_date" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
+                        <group name="solicitud_servicio" string="Solicitud de servicio">
+                            <field name="category_id"/>
+                            <field name="product_id"/>
+                            <field name="conexion" widget='radio'/>
+                            <field name="planta_externa"/>
+                            <field name="planta_interna"/>
+                            <field name="adquisiciones"/>
+                            <field name="ingenieria"/>
+                        </group>
                         <group string="Identificación Solicitante">
                             <!-- <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
                             <!-- <field name="applicant_name"/> <field name="applicant_type" widget='radio'/> <field name="contact_name"/> <field name="phone" widget="phone"/> <field name="email" widget="email"/> <field name="service_type_requested" widget='radio'/> -->
                             <field name="observations" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="file" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                        </group>
+                        <group name="others" string="Información a considerar">
+                            <field name="requires_access_validation" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="priority" widget="radio" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
                         <group string="Ubicación Solicitante">
                             <field name="address" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
@@ -34,10 +47,6 @@
                             <!-- <field name="zoom" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
                             <field name="zoom" readonly="1"/>
                             <button name="add_geolocation" type="object" string="Agregar localización"/>
-                        </group>
-                        <group name="others" string="Información a considerar">
-                            <field name="requires_access_validation" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
-                            <field name="priority" widget="radio" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
                     </group>
                     <group class="col-12">

@@ -7,7 +7,7 @@
     "website": "",
     "license": "LGPL-3",
     "category": "",
-    "depends": ["base", "portal", "base_address_city"],
+    "depends": ["base", "portal", "base_address_city", "product"],
     "data": [
         "data/ir_sequence.xml",
         "security/ir.model.access.csv",

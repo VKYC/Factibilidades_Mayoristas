@@ -77,6 +77,26 @@ class SurveyCustom(models.Model):
         string="Prioridad",
     )
 
+    # * Solicitud de servicio
+
+    category_id = fields.Many2one('product.category', string='Tipo de servicio')
+    product_id = fields.Many2one('product.template', string='Producto', domain="[('categ_id', '=', category_id)]")
+    conexion = fields.Selection([
+        ('simetrica', 'Simétrica'),
+        ('antisimetrica', 'Asimétrica'),
+    ], string='Conexión')
+    planta_externa = fields.Boolean('Planta Externa')
+    planta_interna = fields.Boolean('Planta Interna')
+    adquisiciones = fields.Boolean('Adquisiciones')
+    ingenieria = fields.Boolean('Ingenieria')
+
+    @api.onchange('category_id')
+    def _onchange_category(self):
+        # self.product_id = False
+        self.product_id = False
+        # return {'domain': {'product_id': []}}
+        # return {'domain': {'product_id': [('categ_id', '=', self.category_id.id)]}}
+
     # * Longitud y latitud
     address = fields.Char(
         "Dirección",
