@@ -253,5 +253,4 @@ class SurveyCustom(models.Model):
             vals["name"] = self.env["ir.sequence"].next_by_code(
                 "seq.factibilidades"
             ) or _("New")
-            result = super(SurveyCustom, self).create(vals)
-            return result
+        return super(SurveyCustom, self).create(vals)
