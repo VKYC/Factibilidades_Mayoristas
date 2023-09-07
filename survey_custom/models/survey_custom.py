@@ -31,15 +31,24 @@ class SurveyCustom(models.Model):
     #     "res.partner", string="Solicitante Mundo"
     # )
     partner_id = fields.Many2one('res.partner', 'Usuario actualmente conectado', default=lambda self: self.env.user.partner_id.id, readonly=True)
-    applicant_type_world = fields.Selection(
-        [
-            ("business_area", "Área empresas"),
-            ("public_affairs_area", "Área asuntos públicos"),
-            ("project_area_wholesalers", "Área proyecto mayoristas"),
-            ("management _area", "Área gerencias"),
-        ],
-        string="Tipo Solicitante Mundo",
-    )
+    vat = fields.Char("RUT", related='partner_id.vat', readonly=True)
+    street = fields.Char("Dirección", related='partner_id.street', readonly=True)
+    phone = fields.Char("Teléfono", related='partner_id.phone', readonly=True)
+    email = fields.Char("Correo electrónico", related='partner_id.email', readonly=True)
+    company_partner_id = fields.Many2one('res.partner', related='partner_id.parent_id', readonly=True)
+    company_vat = fields.Char("RUT", related='partner_id.parent_id.vat', readonly=True)
+    company_street = fields.Char("Dirección", related='partner_id.parent_id.street', readonly=True)
+    company_phone = fields.Char("Teléfono", related='partner_id.parent_id.phone', readonly=True)
+    company_email = fields.Char("Correo electrónico", related='partner_id.parent_id.email', readonly=True)
+    # applicant_type_world = fields.Selection(
+    #     [
+    #         ("business_area", "Área empresas"),
+    #         ("public_affairs_area", "Área asuntos públicos"),
+    #         ("project_area_wholesalers", "Área proyecto mayoristas"),
+    #         ("management _area", "Área gerencias"),
+    #     ],
+    #     string="Tipo Solicitante Mundo",
+    # )
     points_request_number = fields.Integer(
         "Cantidad de puntos solicitados", required=True
     )
@@ -81,6 +90,7 @@ class SurveyCustom(models.Model):
 
     category_id = fields.Many2one('product.category', string='Tipo de servicio')
     product_id = fields.Many2one('product.template', string='Producto', domain="[('categ_id', '=', category_id)]")
+    service_speed_id = fields.Many2one('service.speed', string='Velocidad')
     conexion = fields.Selection([
         ('simetrica', 'Simétrica'),
         ('antisimetrica', 'Asimétrica'),

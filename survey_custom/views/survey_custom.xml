@@ -16,7 +16,11 @@
                         <group string="Identificación Mundo">
                             <!-- <field name="assigned_zone_cl_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> <field name="applicant_world_partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
                             <field name="partner_id" readonly="1"/>
-                            <field name="applicant_type_world" widget='radio' attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
+                            <field name="vat"/>
+                            <field name="street"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <!-- <field name="applicant_type_world" widget='radio' attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
                             <field name="points_request_number" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                             <field name="application_date" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/>
                         </group>
@@ -24,10 +28,18 @@
                             <field name="category_id"/>
                             <field name="product_id"/>
                             <field name="conexion" widget='radio'/>
+                            <field name="service_speed_id"/>
                             <field name="planta_externa"/>
                             <field name="planta_interna"/>
                             <field name="adquisiciones"/>
                             <field name="ingenieria"/>
+                        </group>
+                        <group name="company" string="Compañía">
+                            <field name="company_partner_id" readonly="1"/>
+                            <field name="company_vat"/>
+                            <field name="company_street"/>
+                            <field name="company_phone"/>
+                            <field name="company_email"/>
                         </group>
                         <group string="Identificación Solicitante">
                             <!-- <field name="partner_id" attrs="{'readonly': [('state', 'in', ('confirm','cancel'))]}"/> -->
@@ -91,7 +103,7 @@
                 <field name="partner_id"/>
                 <!-- <field name="user_id"/> -->
                 <!-- <field name="assigned_zone_cl_id"/> <field name="applicant_world_partner_id"/> -->
-                <field name="applicant_type_world"/>
+                <!-- <field name="applicant_type_world"/> -->
                 <field name="points_request_number"/>
                 <field name="application_date"/>
                 <!-- <field name="applicant_name"/> <field name="applicant_type"/> <field name="contact_name"/> <field name="phone"/> <field name="email"/> -->
